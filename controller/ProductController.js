@@ -78,24 +78,28 @@ export const createProduct = async (req, res) => {
 
   export const searchProducto = async (req, res) => {
     try {
-      const { nombre, categoria } = req.body;
+      const { dato } = req.body;
   
+      /*
       // Preparamos el objeto de búsqueda
       let searchConditions = {};
   
       // Si 'nombre' es proporcionado, agregar la condición de búsqueda por nombre
-      if (nombre) {
-        searchConditions.nombre = { [Op.like]: `%${nombre}%` };
-      }
+      if (dato) {
+        searchConditions.nombre = { [Op.like]: `%${dato}%` };
+      }*/
+
   
-      // Si 'categoria' es proporcionado, agregar la condición de búsqueda por categoría
-      if (categoria) {
-        searchConditions.categoria = { [Op.like]: `%${categoria}%` };
-      }
   
       // Buscar productos con las condiciones especificadas
+      
       const productos = await ProductModel.findAll({
-        where: searchConditions,
+        where: {
+          [Op.or]: [
+            { nombre: { [Op.like]: `%${dato}%` } },
+            { categoria: { [Op.like]: `%${dato}%` } }
+          ]
+        }
       });
   
       // Retornar los productos encontrados
